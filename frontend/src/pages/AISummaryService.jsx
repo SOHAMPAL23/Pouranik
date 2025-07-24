@@ -1,7 +1,3 @@
-// aiSummaryService.js
-// Mock AI Summary Generator Service
-// In a real implementation, this would connect to OpenAI, Google's Gemini, or similar AI APIs
-
 class AISummaryService {
   constructor() {
     // Mock database of book summaries for demonstration
@@ -61,15 +57,15 @@ class AISummaryService {
    * In production, replace this with actual AI API calls
    */
   async processBookWithAI(bookInfo) {
-    const { title, authors, description, categories, pageCount } = bookInfo;
+    const { title, categories, pageCount } = bookInfo;
     
     // Generate contextual summary based on book data
     const summary = {
-      tldr: this.generateTLDR(title, description, categories),
-      keyPoints: this.generateKeyPoints(description, categories, pageCount),
-      themes: this.extractThemes(categories, description),
+      tldr: this.generateTLDR(title, categories),
+      keyPoints: this.generateKeyPoints(categories, pageCount),
+      themes: this.extractThemes(categories),
       readingTime: this.estimateReadingTime(pageCount),
-      difficulty: this.assessDifficulty(description, pageCount)
+      difficulty: this.assessDifficulty(pageCount)
     };
 
     return summary;
@@ -78,7 +74,7 @@ class AISummaryService {
   /**
    * Generate TL;DR based on book information
    */
-  generateTLDR(title, description, categories) {
+  generateTLDR(title, categories) {
     const templates = [
       `${title} is a comprehensive exploration of its subject matter, offering readers valuable insights and practical knowledge.`,
       `This work delves into important themes while providing readers with thought-provoking perspectives and actionable advice.`,
@@ -92,7 +88,7 @@ class AISummaryService {
   /**
    * Generate key points from book content
    */
-  generateKeyPoints(description, categories, pageCount) {
+  generateKeyPoints(categories) {
     const basePoints = [
       "Provides comprehensive coverage of the main topic with clear explanations",
       "Offers practical strategies and actionable insights for readers",
@@ -138,29 +134,16 @@ class AISummaryService {
   /**
    * Extract themes from categories and description
    */
-  extractThemes(categories, description) {
+  extractThemes(categories) {
     const themes = [];
     
     if (categories) {
       themes.push(...categories.slice(0, 3));
     }
     
-    // Add description-based themes (simplified logic)
-    const themeKeywords = {
-      "Leadership": ["leader", "leadership", "manage", "team"],
-      "Innovation": ["innovation", "creative", "technology", "future"],
-      "Personal Growth": ["growth", "development", "improve", "change"],
-      "Relationships": ["relationship", "love", "family", "social"]
-    };
-
-    if (description) {
-      const lowerDesc = description.toLowerCase();
-      Object.keys(themeKeywords).forEach(theme => {
-        if (themeKeywords[theme].some(keyword => lowerDesc.includes(keyword))) {
-          themes.push(theme);
-        }
-      });
-    }
+    // Add some default themes
+    const defaultThemes = ["Knowledge", "Learning", "Insights"];
+    themes.push(...defaultThemes);
 
     return [...new Set(themes)].slice(0, 4); // Remove duplicates and limit
   }
@@ -186,24 +169,19 @@ class AISummaryService {
   /**
    * Assess reading difficulty
    */
-  assessDifficulty(description, pageCount) {
-    // Simplified difficulty assessment
-    if (!description) return "Intermediate";
+  assessDifficulty(pageCount) {
+    // Simplified difficulty assessment based on page count
+    if (!pageCount) return "Intermediate";
     
-    const complexWords = ["theoretical", "philosophical", "technical", "academic", "research"];
-    const hasComplexWords = complexWords.some(word => 
-      description.toLowerCase().includes(word)
-    );
-    
-    if (pageCount && pageCount > 500 && hasComplexWords) return "Advanced";
-    if (pageCount && pageCount < 200) return "Beginner";
+    if (pageCount > 500) return "Advanced";
+    if (pageCount < 200) return "Beginner";
     return "Intermediate";
   }
 
   /**
    * Check if summary exists in cache
    */
-  async getCachedSummary(bookId) {
+  async getCachedSummary() {
     // In a real implementation, this would check a database or cache
     // For now, return null to always generate new summaries
     return null;
@@ -212,9 +190,9 @@ class AISummaryService {
   /**
    * Save summary to cache
    */
-  async cacheSummary(bookId, summary) {
+  async cacheSummary(summary) {
     // In a real implementation, this would save to database
-    console.log(`Caching summary for book ${bookId}:`, summary);
+    console.log('Caching summary:', summary);
   }
 
   /**

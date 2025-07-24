@@ -1,18 +1,16 @@
-// AISummarySection.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const AISummarySection = ({ bookInfo, cardBaseClasses }) => {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showFullSummary, setShowFullSummary] = useState(false);
 
   // Mock AI Summary Service (inline for demonstration)
   const generateMockSummary = async (bookInfo) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 2500));
     
-    const { title, authors, description, categories, pageCount } = bookInfo;
+    const { title, categories, pageCount } = bookInfo;
     
     // Generate contextual summary
     const generateTLDR = () => {
