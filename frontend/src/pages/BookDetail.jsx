@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import AISummarySection from './AISummarySection';
 
 export default function BookDetail() {
   const { id } = useParams();
@@ -215,6 +216,9 @@ export default function BookDetail() {
                   </div>
                 )}
               </header>
+
+              {/* AI Summary Section - NEW FEATURE */}
+              <AISummarySection bookInfo={info} cardBaseClasses={cardBaseClasses} />
 
               {/* Description */}
               {info.description && (
