@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-
+import AISummarySection from './AISummarySection';
 
 export default function BookDetail() {
   const { id } = useParams();
