@@ -319,10 +319,23 @@ export default function BookDetail() {
                   ))}
                 </div>
               </section>
+              
+
             </div>
           </div>
+          <div className={cardBaseClasses}>
+            <AuthorRecommendations
+              currentBookId={id}
+              author={info.authors}
+            />
+          </div>
+          
+          
+
         </div>
       </section>
+      
     </div>
+    
   );
 }
