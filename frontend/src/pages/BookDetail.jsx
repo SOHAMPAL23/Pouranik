@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import AISummarySection from '../pages/AISummarySection';
 import { IoLibraryOutline } from "react-icons/io5";
+import AddBookModal from '../components/Library_components/AddBookModal';
 
 import AuthorRecommendations from '../components/AuthorRecommendations';
 
@@ -9,6 +10,7 @@ export default function BookDetail() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setBook(null);
@@ -79,11 +81,14 @@ export default function BookDetail() {
   const imageUrl =
     info.imageLinks?.extraLarge || info.imageLinks?.large || info.imageLinks?.medium || info.imageLinks?.thumbnail;
 
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans antialiased">
       {/* Navigation */}
       <section className="!py-8 bg-white shadow-sm">
-        <div className="!max-w-7xl mx-auto !px-4 !sm:px-6 !lg:px-8">
+        <div className="!max-w-7xl mx-auto !px-4 !sm:px-6 !lg:px-8 flex justify-between items-center">
           <Link
             to="/explore"
             className="inline-flex items-center !px-4 !py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 no-underline"
@@ -91,6 +96,13 @@ export default function BookDetail() {
             <span className="!mr-2 text-lg">←</span>
             Back to Explore
           </Link>
+          <button
+            className='inline-flex items-center !px-4 !py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 no-underline'
+            onClick={openModal}
+          >
+            <span className='!mr-2 text-lg'><IoLibraryOutline /></span>
+            Add to Library 
+          </button>
         </div>
       </section>
 
@@ -293,7 +305,23 @@ export default function BookDetail() {
                   </div>
                 </section>
               )}
-
+              <div className='grid grid-cols-1'>
+                  {[
+                    {
+                      icon: '📝',
+                      title: 'User Reviews & Ratings',
+                      description: 'Read and write detailed reviews from fellow readers'
+                    },
+                  ].map((feature, index) => (
+                    <Link to={`/book/${id}/reviews`} key={index} className="bg-gray-50 !p-6 rounded-lg shadow-sm flex items-start space-x-4 w-full">
+                      <div className="text-4xl">{feature.icon}</div>
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-800 !mb-1">{feature.title}</h4>
+                        <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               <section className={`${cardBaseClasses} border-l-4 border-indigo-500`}> {/* Accent border */}
                 <h3 className="text-2xl font-bold text-gray-800 !mb-6 flex items-center gap-3">
                   <span className="text-yellow-500 text-3xl">🌟</span>
@@ -301,16 +329,6 @@ export default function BookDetail() {
                 </h3>
                 <div className="grid md:grid-cols-2 !gap-6">
                   {[
-                    {
-                      icon: '📝',
-                      title: 'User Reviews & Ratings',
-                      description: 'Read and write detailed reviews from fellow readers'
-                    },
-                    {
-                      icon: '📚',
-                      title: 'Personal Library',
-                      description: 'Add books to your reading lists and track progress'
-                    },
                     {
                       icon: '🎯',
                       title: 'Smart Recommendations',
@@ -347,7 +365,9 @@ export default function BookDetail() {
 
         </div>
       </section>
-      
+
+      <AddBookModal isOpen={isModalOpen} onClose={closeModal} bookInfo={info} book={book} />
+
     </div>
     
   );
