@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import AISummarySection from './AISummarySection';
+import AISummarySection from '../pages/AISummarySection';
+import { IoLibraryOutline } from "react-icons/io5";
+
+import AuthorRecommendations from '../components/AuthorRecommendations';
 
 export default function BookDetail() {
   const { id } = useParams();
@@ -216,9 +219,19 @@ export default function BookDetail() {
                   </div>
                 )}
               </header>
-
-              {/* AI Summary Section - NEW FEATURE */}
-              <AISummarySection bookInfo={info} cardBaseClasses={cardBaseClasses} />
+              
+              <AISummarySection 
+                          bookInfo={{
+                            title: info.title,
+                            authors: info.authors,
+                            description: info.description,
+                            categories: info.categories,
+                            pageCount: info.pageCount,
+                            publishedDate: info.publishedDate,
+                            averageRating: info.averageRating
+                          }}
+                          cardBaseClasses={cardBaseClasses}
+                        />
 
               {/* Description */}
               {info.description && (
